@@ -1,0 +1,1 @@
+Якщо GET /api/statuses падає з Unknown field `showInSidebar` на AccountingGroup — згенерований клієнт застарів. Рішення: `npx prisma generate` у каталозі nextjs_vmd, перезапуск dev (бажано видалити `.next`). У package.json додано script `postinstall: prisma generate`, щоб після npm install клієнт завжди відповідав schema.prisma.

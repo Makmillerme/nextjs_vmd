@@ -1,0 +1,184 @@
+[
+    {
+        "id":  "69c683767073706b5c9212e3",
+        "name":  "Що це за продукт",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Внутрішній веб-додаток ProductERP (GitHub: Makmillerme/ProductERP, локально nextjs_vmd).\nОблік і редагування товарів з гнучкою моделлю даних: категорії, типи, поля, таби, статуси.\nКаталог, картка товару (EAV), адмінка моделі та користувачів.",
+        "url":  "https://trello.com/c/iAceo02o/16-%D1%89%D0%BE-%D1%86%D0%B5-%D0%B7%D0%B0-%D0%BF%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82"
+    },
+    {
+        "id":  "69c683761d9e216fbd5ab9ac",
+        "name":  "Навіщо і хто користувачі",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Централізувати дані про продукти, документи та медіа.`nРолі й права, DisplayConfig для відображення.`nЕкрани: головна, канбан, налаштування, курси валют (Goverla) у шапці.",
+        "url":  "https://trello.com/c/6rzCu8zK/17-%D0%BD%D0%B0%D0%B2%D1%96%D1%89%D0%BE-%D1%96-%D1%85%D1%82%D0%BE-%D0%BA%D0%BE%D1%80%D0%B8%D1%81%D1%82%D1%83%D0%B2%D0%B0%D1%87%D1%96"
+    },
+    {
+        "id":  "69c683775ef35dedd5025ed2",
+        "name":  "Стек і інструменти",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Next.js 15 App Router, React 19, TS strict, Tailwind 4, Shadcn, TanStack Query + persist, nuqs, Zustand, Prisma + Postgres, Better-Auth, date-fns, sonner.`nNode \u003e= 20.19.0; перед dev/build — npm run generate:locales.",
+        "url":  "https://trello.com/c/tMnDHPJz/18-%D1%81%D1%82%D0%B5%D0%BA-%D1%96-%D1%96%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B8"
+    },
+    {
+        "id":  "69c6837738ce3b5c93ce9280",
+        "name":  "Дані та EAV",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Product, ProductType, Category, ProductStatus; значення полів у ProductFieldValue (текст, число, дата) без жорстких колонок на кожне поле.`nМедіа й документи окремими сутностями; системний таб golovna; папки — src/config/product-documents.ts.",
+        "url":  "https://trello.com/c/hshnYXRU/19-%D0%B4%D0%B0%D0%BD%D1%96-%D1%82%D0%B0-eav"
+    },
+    {
+        "id":  "69c68377a11b6c8fbc168235",
+        "name":  "Маршрути й зони UI",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "/, /catalog, /catalog/[categoryId]; /management/* (data-model, display, api-integrations, automations, users); /login, /settings.`nКонфіг меню: src/config/navigation.ts. Features: products, management, currency, home, kanban, settings.",
+        "url":  "https://trello.com/c/UIATWu48/20-%D0%BC%D0%B0%D1%80%D1%88%D1%80%D1%83%D1%82%D0%B8-%D0%B9-%D0%B7%D0%BE%D0%BD%D0%B8-ui"
+    },
+    {
+        "id":  "69c68378db26ff44dec7d76e",
+        "name":  "API (огляд)",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Застосунок: /api/products, /api/product-config, /api/categories, /api/statuses, auth, me, currency/goverla.`nАдмін: /api/admin/* (categories, product-types, field-definitions, tabs, statuses, display-config, users тощо). Вбудований Python parser прибрано.`nДеталі в Serena: nextjs_vmd-api-db-routes.",
+        "url":  "https://trello.com/c/Rhgvav9d/21-api-%D0%BE%D0%B3%D0%BB%D1%8F%D0%B4"
+    },
+    {
+        "id":  "69c68378687270cf43440e3a",
+        "name":  "Адмінка: модель даних",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Підтаби: типи, категорії, поля, таби й поля, статуси; display окремо.`nКеш і таби: management-state.ts, MANAGEMENT_STALE_MS (див. Serena: management/state-and-cache-first).",
+        "url":  "https://trello.com/c/RPOVYKI0/22-%D0%B0%D0%B4%D0%BC%D1%96%D0%BD%D0%BA%D0%B0-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C-%D0%B4%D0%B0%D0%BD%D0%B8%D1%85"
+    },
+    {
+        "id":  "69c6837990a699a5f0f8facf",
+        "name":  "Що вже зроблено (рівень продукту)",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Міграція vehicle → product, EAV.`nУніфікація UI: TablePaginationBar, ConfirmDestructiveDialog, admin API client, management list states, пілот RHF+Zod (див. audit/ui-unification-refactor-scope-2025-03).`nFetch/кеш: perf/data-fetching-modernization-implemented. stretchInRow у табах: refactor/tab-field-stretch-in-row-phases-march-2025.",
+        "url":  "https://trello.com/c/aSlRldlR/23-%D1%89%D0%BE-%D0%B2%D0%B6%D0%B5-%D0%B7%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BD%D0%BE-%D1%80%D1%96%D0%B2%D0%B5%D0%BD%D1%8C-%D0%BF%D1%80%D0%BE%D0%B4%D1%83%D0%BA%D1%82%D1%83"
+    },
+    {
+        "id":  "69c683790dba95f2f294e9e2",
+        "name":  "Куди далі (напрями)",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "За потреби TanStack Table; розширити RHF+Zod; дрібно рознести великі компоненти.`nAutomations / api-integrations — зона майбутніх інтеграцій.",
+        "url":  "https://trello.com/c/h5UyNKha/24-%D0%BA%D1%83%D0%B4%D0%B8-%D0%B4%D0%B0%D0%BB%D1%96-%D0%BD%D0%B0%D0%BF%D1%80%D1%8F%D0%BC%D0%B8"
+    },
+    {
+        "id":  "69c68379769416801bfe4ed2",
+        "name":  "Відкладені ідеї в репозиторії",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Джерело істини для backlog у коді:`nnextjs_vmd/docs/backlog/ideas.md`nGitHub: https://github.com/Makmillerme/ProductERP",
+        "url":  "https://trello.com/c/x3GqYro6/25-%D0%B2%D1%96%D0%B4%D0%BA%D0%BB%D0%B0%D0%B4%D0%B5%D0%BD%D1%96-%D1%96%D0%B4%D0%B5%D1%97-%D0%B2-%D1%80%D0%B5%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80%D1%96%D1%97"
+    },
+    {
+        "id":  "69c683aab28762797da7a10f",
+        "name":  "Синхронізація Trello ↔ Serena",
+        "idList":  "69c68375842484c0bde562fd",
+        "desc":  "Після великих етапів: оновити тут картку «Що вже зроблено» та за потреби «API (огляд)».\nУ Cursor: Serena write_memory — nextjs_vmd-current-state-2025-03, nextjs_vmd-api-db-routes (якщо API змінились).\nПовна інструкція в Serena: memory workflow/trello-board-serena-sync.",
+        "url":  "https://trello.com/c/lswnCsfc/32-%D1%81%D0%B8%D0%BD%D1%85%D1%80%D0%BE%D0%BD%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F-trello-%E2%86%94-serena"
+    },
+    {
+        "id":  "69c6828a37929e2706d1d5b0",
+        "name":  "Лейаут і shell",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "src/components/layout: шапка, сайдбар, провайдери (React Query, локаль), вхід, пункт каталогу, скелетон.",
+        "url":  "https://trello.com/c/KDDfTMhB/6-%D0%BB%D0%B5%D0%B9%D0%B0%D1%83%D1%82-%D1%96-shell"
+    },
+    {
+        "id":  "69c6828b1c8b9718a84bf98a",
+        "name":  "Спільні таблиці та форми",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "src/components: пагінація, підтвердження видалення, завантаження/порожньо, colgroup, обгортка таблиці, форма в sheet, overlay portal.",
+        "url":  "https://trello.com/c/0fah6vd9/7-%D1%81%D0%BF%D1%96%D0%BB%D1%8C%D0%BD%D1%96-%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%86%D1%96-%D1%82%D0%B0-%D1%84%D0%BE%D1%80%D0%BC%D0%B8"
+    },
+    {
+        "id":  "69c6828beb67f166c0267608",
+        "name":  "UI-kit (shadcn)",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "src/components/ui: інпути, діалоги, sheet, таблиця, таби, сайдбар, календар, форма.",
+        "url":  "https://trello.com/c/qTnlEHX8/8-ui-kit-shadcn"
+    },
+    {
+        "id":  "69c6828c4bda4f5b23192d7d",
+        "name":  "Каталог і картка товару",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "src/features/products: список, sheet деталей, віджети полів, медіа/файли, сітка полів, EAV.",
+        "url":  "https://trello.com/c/sHvfsNCt/9-%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3-%D1%96-%D0%BA%D0%B0%D1%80%D1%82%D0%BA%D0%B0-%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D1%83"
+    },
+    {
+        "id":  "69c6828c9c4438a02abd6a17",
+        "name":  "Адмінка: модель даних",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "products-config і data-model: категорії, типи, поля, таби, статуси, превʼю картки.",
+        "url":  "https://trello.com/c/YulroVRl/10-%D0%B0%D0%B4%D0%BC%D1%96%D0%BD%D0%BA%D0%B0-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C-%D0%B4%D0%B0%D0%BD%D0%B8%D1%85"
+    },
+    {
+        "id":  "69c6828cf400d0978cc7e410",
+        "name":  "Адмінка: користувачі й ролі",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "Користувачі, ролі, бан, видалення, зміна ролі.",
+        "url":  "https://trello.com/c/QWun7mLd/11-%D0%B0%D0%B4%D0%BC%D1%96%D0%BD%D0%BA%D0%B0-%D0%BA%D0%BE%D1%80%D0%B8%D1%81%D1%82%D1%83%D0%B2%D0%B0%D1%87%D1%96-%D0%B9-%D1%80%D0%BE%D0%BB%D1%96"
+    },
+    {
+        "id":  "69c6828df07b19a15e34d83e",
+        "name":  "Адмінка: відображення та інтеграції",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "Display, api-integrations, automations.",
+        "url":  "https://trello.com/c/NTSHoT0q/12-%D0%B0%D0%B4%D0%BC%D1%96%D0%BD%D0%BA%D0%B0-%D0%B2%D1%96%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F-%D1%82%D0%B0-%D1%96%D0%BD%D1%82%D0%B5%D0%B3%D1%80%D0%B0%D1%86%D1%96%D1%97"
+    },
+    {
+        "id":  "69c6828d0061986c06d386bd",
+        "name":  "Інші екрани",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "home, kanban у застосунку, settings, курси валют у шапці.",
+        "url":  "https://trello.com/c/oPGk2Cfz/13-%D1%96%D0%BD%D1%88%D1%96-%D0%B5%D0%BA%D1%80%D0%B0%D0%BD%D0%B8"
+    },
+    {
+        "id":  "69c6828eb3cbc9222a12bfaa",
+        "name":  "API і дані",
+        "idList":  "69c6828a648f1ffec6d272c2",
+        "desc":  "src/app/api, Prisma, products-db, product-field-values, Better-Auth.",
+        "url":  "https://trello.com/c/GY4CGUTo/14-api-%D1%96-%D0%B4%D0%B0%D0%BD%D1%96"
+    },
+    {
+        "id":  "69c6839b25bc976881d90945",
+        "name":  "Як користуємось дошкою",
+        "idList":  "69c68287421bc67024252e95",
+        "desc":  "Робочий потік: Беклог → План → В роботі → Готово.\nКонтекст не чіпати щодня: списки «Про проєкт» та «Компоненти».\nВідкладені ідеї в коді: nextjs_vmd/docs/backlog/ideas.md\nРепо: https://github.com/Makmillerme/ProductERP",
+        "url":  "https://trello.com/c/82evBy8K/31-%D1%8F%D0%BA-%D0%BA%D0%BE%D1%80%D0%B8%D1%81%D1%82%D1%83%D1%94%D0%BC%D0%BE%D1%81%D1%8C-%D0%B4%D0%BE%D1%88%D0%BA%D0%BE%D1%8E"
+    },
+    {
+        "id":  "69c6838ebb1da54c6e4b997e",
+        "name":  "Актуалізувати docs/backlog/ideas.md",
+        "idList":  "69c68287421bc67024252e95",
+        "desc":  "У файлі є блок «Текстові поля» зі статусом «Впроваджено 2025-02-23». Перенести в розділ зробленого або скоротити, щоб backlog у репо не плутав.",
+        "url":  "https://trello.com/c/6LjHdATc/26-%D0%B0%D0%BA%D1%82%D1%83%D0%B0%D0%BB%D1%96%D0%B7%D1%83%D0%B2%D0%B0%D1%82%D0%B8-docs-backlog-ideasmd"
+    },
+    {
+        "id":  "69c6838fefaac7e9de55942f",
+        "name":  "Розширити RHF+Zod на інші форми в management",
+        "idList":  "69c68287421bc67024252e95",
+        "desc":  "Пілот: product-types, statuses. Далі — важчі sheet-форми (див. Serena audit/ui-unification-refactor-scope-2025-03).",
+        "url":  "https://trello.com/c/JmSAVlQM/27-%D1%80%D0%BE%D0%B7%D1%88%D0%B8%D1%80%D0%B8%D1%82%D0%B8-rhfzod-%D0%BD%D0%B0-%D1%96%D0%BD%D1%88%D1%96-%D1%84%D0%BE%D1%80%D0%BC%D0%B8-%D0%B2-management"
+    },
+    {
+        "id":  "69c6838fa54369a6b79104db",
+        "name":  "Рознести великі компоненти на частини",
+        "idList":  "69c68287421bc67024252e95",
+        "desc":  "Кандидати: products-page, field-definitions-management, statuses-management — підкомпоненти та хуки.",
+        "url":  "https://trello.com/c/1uI0lU5k/28-%D1%80%D0%BE%D0%B7%D0%BD%D0%B5%D1%81%D1%82%D0%B8-%D0%B2%D0%B5%D0%BB%D0%B8%D0%BA%D1%96-%D0%BA%D0%BE%D0%BC%D0%BF%D0%BE%D0%BD%D0%B5%D0%BD%D1%82%D0%B8-%D0%BD%D0%B0-%D1%87%D0%B0%D1%81%D1%82%D0%B8%D0%BD%D0%B8"
+    },
+    {
+        "id":  "69c68390e77713e04a95e133",
+        "name":  "Оцінити TanStack Table",
+        "idList":  "69c68287421bc67024252e95",
+        "desc":  "Лише якщо знадобляться складні таблиці (multi-sort, resize). Інакше залишити поточний Table.",
+        "url":  "https://trello.com/c/iB4hSsIe/29-%D0%BE%D1%86%D1%96%D0%BD%D0%B8%D1%82%D0%B8-tanstack-table"
+    },
+    {
+        "id":  "69c68390665aff964bb5633b",
+        "name":  "Automations / API integrations — наступні кроки",
+        "idList":  "69c68287421bc67024252e95",
+        "desc":  "Зафіксувати конкретні інтеграції після продуктової пріоритезації (зараз зона росту).",
+        "url":  "https://trello.com/c/Svf4tsHX/30-automations-api-integrations-%D0%BD%D0%B0%D1%81%D1%82%D1%83%D0%BF%D0%BD%D1%96-%D0%BA%D1%80%D0%BE%D0%BA%D0%B8"
+    }
+]

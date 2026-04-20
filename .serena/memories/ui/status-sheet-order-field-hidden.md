@@ -1,0 +1,1 @@
+Форма статусу/підстатусу в `statuses-management.tsx`: видимий блок «Порядок» + orderMoveHint прибрано; поле `order` лишається як прихований `<input type="hidden" />` у FormField для збереження `values.order` при створенні та reset.

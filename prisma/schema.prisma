@@ -1,0 +1,386 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  role          String?
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("user")
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime
+  updatedAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+// EAV: всі польові дані — у ProductFieldValue. Без хардкоду.
+model Product {
+  id                Int       @id @default(autoincrement())
+  productTypeId     String?   @map("product_type_id")
+  categoryId        String?   @map("category_id")
+  productStatusId   String?   @map("product_status_id")
+  processedFileId   Int?      @map("processed_file_id")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  productTypeRef    ProductType?     @relation(fields: [productTypeId], references: [id], onDelete: SetNull)
+  category          Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  productStatusRef  ProductStatus?  @relation("ProductMainStatus", fields: [productStatusId], references: [id], onDelete: SetNull)
+  productSubStatusId String?         @map("product_sub_status_id")
+  productSubStatusRef ProductStatus? @relation("ProductSubStatus", fields: [productSubStatusId], references: [id], onDelete: SetNull)
+  media             ProductMedia[]
+  documents         ProductDocument[]
+  fieldValues       ProductFieldValue[]
+
+  @@index([productTypeId])
+  @@index([categoryId])
+  @@index([productStatusId])
+  @@index([productSubStatusId])
+  @@index([createdAt])
+  @@map("products")
+}
+
+model ProductMedia {
+  id         Int      @id @default(autoincrement())
+  productId  Int      @map("product_id")
+  path       String
+  mimeType   String?  @map("mime_type")
+  kind       String?  // "image" | "video"
+  order      Int      @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_media")
+}
+
+model ProductDocument {
+  id        Int      @id @default(autoincrement())
+  productId Int      @map("product_id")
+  folder    String   // "01_import" | "02_logistics" | "03_customs" | "04_costs" | "05_sale" | "06_taxes"
+  fileName  String   @map("file_name")
+  filePath  String   @map("file_path")
+  mimeType  String?  @map("mime_type")
+  fileSize  Int?     @map("file_size")
+  createdAt DateTime @default(now()) @map("created_at")
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_documents")
+}
+
+// Ролі (код "admin" — єдиний захардкоджений, має усі права; інші ролі з БД)
+model Role {
+  id          String   @id @default(cuid())
+  name        String   // Назва для UI, напр. "Менеджер"
+  code        String   // Код ролі, напр. "manager" (може повторюватись)
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model RolePermission {
+  id        String   @id @default(cuid())
+  roleId    String   @map("role_id")
+  sectionId String   @map("section_id") // з config/permissions: users, roles, vehicles, ...
+  actionId  String   @map("action_id")  // view, create, edit, delete, ...
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, sectionId, actionId])
+  @@index([roleId])
+  @@map("role_permissions")
+}
+
+// ---------------------------------------------------------------------------
+// Dynamic Vehicle CMS
+// ---------------------------------------------------------------------------
+
+model AccountingGroup {
+  id              String   @id @default(cuid())
+  categoryId      String   @map("category_id")
+  category        Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  parentStatusId  String?  @map("parent_status_id")
+  parentStatus    ProductStatus? @relation("StatusSatelliteGroups", fields: [parentStatusId], references: [id], onDelete: Cascade)
+  nextGroupId     String?  @unique @map("next_group_id")
+  nextGroup       AccountingGroup? @relation("GroupChain", fields: [nextGroupId], references: [id], onDelete: SetNull)
+  prevGroup       AccountingGroup? @relation("GroupChain")
+  isDefault       Boolean  @default(false) @map("is_default")
+  startStatusId   String?  @map("start_status_id")
+  startStatus     ProductStatus? @relation("GroupStartStatus", fields: [startStatusId], references: [id], onDelete: SetNull)
+  endStatusId     String?  @map("end_status_id")
+  endStatus       ProductStatus? @relation("GroupEndStatus", fields: [endStatusId], references: [id], onDelete: SetNull)
+  name            String
+  order           Int      @default(0)
+  showInSidebar   Boolean  @default(true) @map("show_in_sidebar")
+  /** allow | requireComplete — лише для сателітних груп (parentStatusId != null). */
+  subFunnelPolicy String   @default("allow") @map("sub_funnel_policy")
+  description     String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  statuses        ProductStatus[] @relation("GroupStatuses")
+
+  @@index([categoryId])
+  @@index([parentStatusId])
+  @@index([categoryId, parentStatusId])
+  @@index([categoryId, isDefault])
+  @@map("accounting_groups")
+}
+
+model ProductStatus {
+  id                String   @id @default(cuid())
+  accountingGroupId String   @map("accounting_group_id")
+  accountingGroup   AccountingGroup @relation("GroupStatuses", fields: [accountingGroupId], references: [id], onDelete: Cascade)
+  name              String
+  code              String?
+  color             String   @default("#6b7280")
+  order             Int      @default(0)
+  description       String?
+  isDefault         Boolean  @default(false) @map("is_default")
+  hasSubStatuses    Boolean  @default(false) @map("has_sub_statuses")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  satelliteGroups   AccountingGroup[] @relation("StatusSatelliteGroups")
+  groupsStartingAt AccountingGroup[] @relation("GroupStartStatus")
+  groupsEndingAt   AccountingGroup[] @relation("GroupEndStatus")
+  products         Product[] @relation("ProductMainStatus")
+  subProducts      Product[] @relation("ProductSubStatus")
+
+  @@index([accountingGroupId])
+  @@map("product_statuses")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  productTypes             ProductType[]
+  products                 Product[]
+  accountingGroups         AccountingGroup[]
+  tabs                     TabDefinition[]
+  displayConfigs           DisplayConfig[]
+  fieldDefinitionCategories FieldDefinitionCategory[]
+
+  @@map("categories")
+}
+
+model ProductType {
+  id             String    @id @default(cuid())
+  categoryId     String?   @map("category_id")
+  category       Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name           String
+  description    String?
+  isAutoDetected Boolean   @default(false) @map("is_auto_detected")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  products                   Product[]
+  tabFields                  TabField[]
+  fieldDefinitionProductTypes FieldDefinitionProductType[]
+
+  @@index([categoryId])
+  @@map("product_types")
+}
+
+model FieldDefinition {
+  id           String    @id @default(cuid())
+  code         String?   // Опціонально: для формул та зручності. Унікальний у контексті табу.
+  label        String
+  dataType     String    @default("string") @map("data_type")
+  widgetType   String    @default("text_input") @map("widget_type")
+  isSystem     Boolean   @default(false) @map("is_system")
+  systemColumn String?   @map("system_column")
+  presetValues String?   @map("preset_values")
+  validation   String?
+  unit         String?
+  defaultValue String?   @map("default_value")
+  placeholder  String?
+  hiddenOnCard Boolean  @default(false) @map("hidden_on_card")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  fieldDefinitionCategories  FieldDefinitionCategory[]
+  fieldDefinitionProductTypes FieldDefinitionProductType[]
+  tabFields          TabField[]
+  values             ProductFieldValue[]
+  dataSourceMappings DataSourceMapping[]
+
+  @@map("field_definitions")
+}
+
+model FieldDefinitionCategory {
+  fieldDefinitionId String         @map("field_definition_id")
+  categoryId        String         @map("category_id")
+  fieldDefinition   FieldDefinition @relation(fields: [fieldDefinitionId], references: [id], onDelete: Cascade)
+  category          Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([fieldDefinitionId, categoryId])
+  @@index([fieldDefinitionId])
+  @@index([categoryId])
+  @@map("field_definition_categories")
+}
+
+model FieldDefinitionProductType {
+  fieldDefinitionId String         @map("field_definition_id")
+  productTypeId    String         @map("product_type_id")
+  fieldDefinition   FieldDefinition @relation(fields: [fieldDefinitionId], references: [id], onDelete: Cascade)
+  productType      ProductType    @relation(fields: [productTypeId], references: [id], onDelete: Cascade)
+
+  @@id([fieldDefinitionId, productTypeId])
+  @@index([fieldDefinitionId])
+  @@index([productTypeId])
+  @@map("field_definition_product_types")
+}
+
+model TabDefinition {
+  id         String   @id @default(cuid())
+  categoryId String   @map("category_id")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name       String
+  icon       String?
+  tabConfig  String?  @map("tab_config")
+  order      Int      @default(0)
+  isSystem   Boolean  @default(false) @map("is_system")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  fields TabField[]
+
+  @@index([categoryId])
+  @@map("tab_definitions")
+}
+
+model TabField {
+  id                String           @id @default(cuid())
+  tabDefinitionId   String           @map("tab_definition_id")
+  tabDefinition     TabDefinition    @relation(fields: [tabDefinitionId], references: [id], onDelete: Cascade)
+  fieldDefinitionId String           @map("field_definition_id")
+  fieldDefinition   FieldDefinition  @relation(fields: [fieldDefinitionId], references: [id], onDelete: Cascade)
+  productTypeId     String?          @map("product_type_id")
+  productType       ProductType?     @relation(fields: [productTypeId], references: [id], onDelete: SetNull)
+  order             Int              @default(0)
+  colSpan           Int              @default(1) @map("col_span")
+  isRequired        Boolean          @default(false) @map("is_required")
+  sectionTitle      String?          @map("section_title")
+  /** Розтягувати вузький віджет на частку рядка (разом з іншими stretch у цьому рядку). */
+  stretchInRow      Boolean          @default(false) @map("stretch_in_row")
+  createdAt         DateTime         @default(now()) @map("created_at")
+
+  @@unique([tabDefinitionId, fieldDefinitionId, productTypeId])
+  @@index([tabDefinitionId])
+  @@index([productTypeId])
+  @@map("tab_fields")
+}
+
+model ProductFieldValue {
+  id                String          @id @default(cuid())
+  productId         Int             @map("product_id")
+  product           Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  fieldDefinitionId String          @map("field_definition_id")
+  fieldDefinition   FieldDefinition @relation(fields: [fieldDefinitionId], references: [id], onDelete: Cascade)
+  textValue         String?         @map("text_value")
+  numericValue      Float?          @map("numeric_value")
+  dateValue         DateTime?       @map("date_value")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  @@unique([productId, fieldDefinitionId])
+  @@index([productId])
+  @@index([fieldDefinitionId])
+  @@map("product_field_values")
+}
+
+model DataSourceMapping {
+  id                String          @id @default(cuid())
+  sourceType        String          @map("source_type")
+  sourceFieldCode   String          @map("source_field_code")
+  fieldDefinitionId String          @map("field_definition_id")
+  fieldDefinition   FieldDefinition @relation(fields: [fieldDefinitionId], references: [id], onDelete: Cascade)
+  transformRule     String?         @map("transform_rule")
+  description       String?
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  @@unique([sourceType, sourceFieldCode])
+  @@index([fieldDefinitionId])
+  @@map("data_source_mappings")
+}
+
+model DisplayConfig {
+  id         String    @id @default(cuid())
+  roleCode   String?   @map("role_code")
+  userId     String?   @map("user_id")
+  categoryId String?   @map("category_id")
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  config     String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@unique([roleCode, userId, categoryId])
+  @@map("display_configs")
+}

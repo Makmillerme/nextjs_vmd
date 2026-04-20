@@ -1,0 +1,3 @@
+ProductERP (nextjs_vmd). Next.js 15 App Router, React 19, Tailwind 4, Shadcn, TanStack Query (localStorage persist), nuqs, Prisma/Postgres, Better-Auth.
+
+Шляхи: src/features/products/ — products-page, product-detail-sheet, EAV ProductFieldValue, widgets; src/features/management/components/products-config/ — categories, product-types, field-definitions, tabs-config, statuses, display; src/app/api/products, api/admin/*, api/product-config; src/lib/products-db.ts, product-field-values.ts. providers.tsx — PersistQueryClientProvider. query-client.ts, query-keys.ts. Scripts: generate:locales, clean, db:seed, db:clear, db:clear-statuses.

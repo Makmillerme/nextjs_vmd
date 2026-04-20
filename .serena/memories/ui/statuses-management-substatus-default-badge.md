@@ -1,0 +1,1 @@
+У `statuses-management.tsx` у вкладених рядках підстатусів сателітної групи (`sortedSubs.map`) для `sub.isDefault` додано той самий `Badge` secondary з `productsConfig.statusesConfig.defaultBadge`, що й у головному `StatusRow` для головних статусів.
